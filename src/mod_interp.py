@@ -189,6 +189,14 @@ def interpolate(df, time_series, start, end, var='sla'):
              time=selected.index.values),
         interpolator="inverse_distance_weighting",
         num_threads=0)
+
+    interpolator = time_series._load_dataset('mdt', start, end)
+    df.loc[mask, ["mmdt_interpolated"]] = interpolator.trivariate(
+        dict(longitude=selected["longitude"].values,
+             latitude=selected["latitude"].values,
+             time=selected.index.values),
+        interpolator="inverse_distance_weighting",
+        num_threads=0)
     
     if var == 'ssh':
         df.msla_interpolated = df.msla_interpolated - df.mdt

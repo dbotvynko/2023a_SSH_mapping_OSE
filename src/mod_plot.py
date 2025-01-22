@@ -145,7 +145,8 @@ def plot_stat_by_regimes(stat_output_filename):
             ds = xr.open_dataset(stat_output_filename, group=f'{region}_{var_name}')
 
             my_dictionary[f'{region}'][f'{var_name}_var [m²]'] =  ds['variance'].values[0]
-            #my_dictionary[f'{region}'][f'{var_name}_rms'] =  ds['rmse'].values[0]
+            my_dictionary[f'{region}'][f'{var_name}_rms'] =  ds['rmse'].values[0]
+            my_dictionary[f'{region}'][f'{var_name}_nrms_score'] =  ds['nrmse_score'].values[0]
     
     for region in ['coastal', 'offshore_highvar', 'offshore_lowvar', 'equatorial_band', 'arctic', 'antarctic']:
         my_dictionary[region]['var_score_allscale'] = 1. - my_dictionary[region]['mapping_err_var [m²]']/my_dictionary[region]['sla_unfiltered_var [m²]']

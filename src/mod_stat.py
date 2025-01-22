@@ -311,6 +311,9 @@ def compute_stat_scores_by_regimes(ds_interp, output_file):
         if data_vector_selected.size > 0:
             coastal_analysis = stats.describe(data_vector_selected, nan_policy='omit')
             coastal_rmse = np.sqrt(np.nanmean((np.ma.masked_invalid(data_vector_selected))**2))
+            if(var_name == 'mapping_err'):
+                coastal_nrmse_score = 1-np.sqrt(np.nanmean(np.ma.masked_invalid(data_vector_selected)**2))/np.sqrt(np.mean((ds_interp['sla_unfiltered'] - ds_interp['lwe']).values**2)),'m')
+
             #lon_vector_selected = np.ma.masked_where(msk, lon_vector).compressed()
             #lat_vector_selected = np.ma.masked_where(msk, lat_vector).compressed()
             #plt.scatter(lon_vector_selected, lat_vector_selected, c=data_vector_selected, s=10)
@@ -325,6 +328,9 @@ def compute_stat_scores_by_regimes(ds_interp, output_file):
         if data_vector_selected.size > 0:
             offshore_highvar_analysis = stats.describe(data_vector_selected, nan_policy='omit')
             offshore_highvar_rmse = np.sqrt(np.nanmean((np.ma.masked_invalid(data_vector_selected))**2))
+            if(var_name == 'mapping_err'):
+                offshore_highvar_nrmse_score = 1-np.sqrt(np.nanmean(np.ma.masked_invalid(data_vector_selected)**2))/np.sqrt(np.mean((ds_interp['sla_unfiltered'] - ds_interp['lwe']).values**2)),'m')
+
             #lon_vector_selected = np.ma.masked_where(msk, lon_vector).compressed()
             #lat_vector_selected = np.ma.masked_where(msk, lat_vector).compressed()
             #plt.scatter(lon_vector_selected, lat_vector_selected, c=data_vector_selected, s=10)
@@ -339,6 +345,9 @@ def compute_stat_scores_by_regimes(ds_interp, output_file):
         if data_vector_selected.size > 0:
             offshore_lowvar_analysis = stats.describe(data_vector_selected, nan_policy='omit')
             offshore_lowvar_rmse = np.sqrt(np.nanmean((np.ma.masked_invalid(data_vector_selected))**2))
+            if(var_name == 'mapping_err'):
+                offshore_lowvar_nrmse_score = 1-np.sqrt(np.nanmean(np.ma.masked_invalid(data_vector_selected)**2))/np.sqrt(np.mean((ds_interp['sla_unfiltered'] - ds_interp['lwe']).values**2)),'m')
+
             #lon_vector_selected = np.ma.masked_where(msk, lon_vector).compressed()
             #lat_vector_selected = np.ma.masked_where(msk, lat_vector).compressed()
             #plt.scatter(lon_vector_selected, lat_vector_selected, c=data_vector_selected, s=10)
@@ -353,6 +362,9 @@ def compute_stat_scores_by_regimes(ds_interp, output_file):
         if data_vector_selected.size > 0:
             equatorial_analysis = stats.describe(data_vector_selected, nan_policy='omit')
             equatorial_rmse = np.sqrt(np.nanmean((np.ma.masked_invalid(data_vector_selected))**2))
+            if(var_name == 'mapping_err'):
+                equatorial_nrmse_score = 1-np.sqrt(np.nanmean(np.ma.masked_invalid(data_vector_selected)**2))/np.sqrt(np.mean((ds_interp['sla_unfiltered'] - ds_interp['lwe']).values**2)),'m')
+
         else:
             equatorial_analysis = [0, [np.nan, np.nan], np.nan, np.nan, np.nan, np.nan,]
             equatorial_rmse = np.nan
@@ -363,6 +375,9 @@ def compute_stat_scores_by_regimes(ds_interp, output_file):
         if data_vector_selected.size > 0:
             arctic_analysis = stats.describe(data_vector_selected, nan_policy='omit')
             arctic_rmse = np.sqrt(np.nanmean((np.ma.masked_invalid(data_vector_selected))**2))
+            if(var_name == 'mapping_err'):
+                arctic_nrmse_score = 1-np.sqrt(np.nanmean(np.ma.masked_invalid(data_vector_selected)**2))/np.sqrt(np.mean((ds_interp['sla_unfiltered'] - ds_interp['lwe']).values**2)),'m')
+
         else:
             arctic_analysis = [0, [np.nan, np.nan], np.nan, np.nan, np.nan, np.nan,]
             arctic_rmse = np.nan
@@ -373,6 +388,9 @@ def compute_stat_scores_by_regimes(ds_interp, output_file):
         if data_vector_selected.size > 0:
             antarctic_analysis = stats.describe(data_vector_selected, nan_policy='omit')
             antarctic_rmse = np.sqrt(np.nanmean((np.ma.masked_invalid(data_vector_selected))**2))
+            if(var_name == 'mapping_err'):
+                antarctic_nrmse_score = 1-np.sqrt(np.nanmean(np.ma.masked_invalid(data_vector_selected)**2))/np.sqrt(np.mean((ds_interp['sla_unfiltered'] - ds_interp['lwe']).values**2)),'m')
+
         else:
             antarctic_analysis = [0, [np.nan, np.nan], np.nan, np.nan, np.nan, np.nan,]
             antarctic_rmse = np.nan
@@ -397,6 +415,8 @@ def compute_stat_scores_by_regimes(ds_interp, output_file):
         kurtosis[:] = coastal_analysis[5]
         rmse = coastal_grp.createVariable("rmse", "f8", "x")
         rmse[:] = coastal_rmse
+        nrmse_score = coastal_grp.createVariable("nrmse_score", "f8", "x")
+        nrmse_score[:] = coastal_nrmse_score
     
     
         offshore_highvar_grp = nc.createGroup(f"offshore_highvar_{var_name}")
@@ -417,6 +437,8 @@ def compute_stat_scores_by_regimes(ds_interp, output_file):
         kurtosis[:] = offshore_highvar_analysis[5]
         rmse = offshore_highvar_grp.createVariable("rmse", "f8", "x")
         rmse[:] = offshore_highvar_rmse
+        nrmse_score = offshore_highvar_grp.createVariable("nrmse_score", "f8", "x")
+        nrmse_score[:] = offshore_highvar_nrmse_score
     
         offshore_lowvar_grp = nc.createGroup(f"offshore_lowvar_{var_name}")
         offshore_lowvar_grp.createDimension("x", 1)
@@ -436,6 +458,8 @@ def compute_stat_scores_by_regimes(ds_interp, output_file):
         kurtosis[:] = offshore_lowvar_analysis[5]
         rmse = offshore_lowvar_grp.createVariable("rmse", "f8", "x")
         rmse[:] = offshore_lowvar_rmse
+        nrmse_score = offshore_lowvar_grp.createVariable("nrmse_score", "f8", "x")
+        nrmse_score[:] = offshore_lowvar_nrmse_score
     
         equatorial_grp = nc.createGroup(f"equatorial_band_{var_name}")
         equatorial_grp.createDimension("x", 1)
@@ -455,6 +479,8 @@ def compute_stat_scores_by_regimes(ds_interp, output_file):
         kurtosis[:] = equatorial_analysis[5]
         rmse = equatorial_grp.createVariable("rmse", "f8", "x")
         rmse[:] = equatorial_rmse
+        nrmse_score = equatorial_grp.createVariable("nrmse_score", "f8", "x")
+        nrmse_score[:] = equatorial_nrmse_score
     
         arctic_grp = nc.createGroup(f"arctic_{var_name}")
         arctic_grp.createDimension("x", 1)
@@ -474,6 +500,8 @@ def compute_stat_scores_by_regimes(ds_interp, output_file):
         kurtosis[:] = arctic_analysis[5]
         rmse = arctic_grp.createVariable("rmse", "f8", "x")
         rmse[:] = arctic_rmse
+        nrmse_score = arctic_grp.createVariable("nrmse_score", "f8", "x")
+        nrmse_score[:] = arctic_nrmse_score
     
         antarctic_grp = nc.createGroup(f"antarctic_{var_name}")
         antarctic_grp.createDimension("x", 1)
@@ -493,6 +521,8 @@ def compute_stat_scores_by_regimes(ds_interp, output_file):
         kurtosis[:] = antarctic_analysis[5]
         rmse = antarctic_grp.createVariable("rmse", "f8", "x")
         rmse[:] = antarctic_rmse
+        nrmse_score = antarctic_grp.createVariable("nrmse_score", "f8", "x")
+        nrmse_score[:] = antarctic_nrmse_score
     
         nc.close()
     
