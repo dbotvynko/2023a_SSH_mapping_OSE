@@ -105,6 +105,41 @@ def compute_median_dx(dataset):
                                                               dataset['latitude'][1:].values
                                                              ))
 
+import glob 
+import os
+import xarray as xr 
+
+# Function to preprocess each file
+def add_satellite_dim(filepath):
+    # Open the dataset
+    ds = xr.open_dataset(filepath)
+    # Extract the satellite name from the file path
+    satellite_name = os.path.basename(filepath).split('_')[2]  # Adjust based on your file naming convention
+    # Add the satellite name as a new dimension and coordinate
+    return ds.expand_dims(satellite=['satellite']).assign_coords(satellite=[satellite_name])
+
+
+def compute_median_from_multiple_satellites(ds_alg):
+    # List of NetCDF files
+    list_of_files = sorted(glob.glob('/Odyssey/public/altimetry_traces/processed_2023_global_4/dl/input/**/**/*2024*/2023/**/*.nc'))
+
+    # Open and preprocess each file individually
+    datasets = [add_satellite_dim(filepath) for filepath in list_of_files]
+    ds_combined = xr.concat(datasets, dim='time')
+
+    distances_total = []
+    for ds in ds_combined.groupby('satellite'):
+        ds = ds[1]
+        distances = pyinterp.geodetic.coordinate_distances(
+            ds['longitude'][:-1].values,
+            ds['latitude'][:-1].values,
+            ds['longitude'][1:].values,
+            ds['latitude'][1:].values
+        )
+        distances_total.append(0.001 * np.median(distances))
+
+    return np.mean(np.stack(distances_total))
+
 
 def apply_bandpass_filter(ds, lambda_min=65., lambda_max=500.):
     """

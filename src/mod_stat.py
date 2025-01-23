@@ -251,9 +251,9 @@ def compute_stat_scores_by_regimes(ds_interp, output_file):
     >>> compute_stat_scores_by_regimes(interpolated_data, output_file)
     """
     
-    distance_to_nearest_coast = '../data/sad/distance_to_nearest_coastline_60.nc'
-    land_sea_mask = '../data/sad/land_water_mask_60.nc'
-    variance_ssh = '../data/sad/variance_cmems_dt_allsat.nc'
+    distance_to_nearest_coast = '/Odyssey/public/data_challenge_ssh_ose/data/sad/distance_to_nearest_coastline_60.nc'
+    land_sea_mask = '/Odyssey/public/data_challenge_ssh_ose/data/sad/land_water_mask_60.nc'
+    variance_ssh = '/Odyssey/public/data_challenge_ssh_ose/data/sad/variance_cmems_dt_allsat.nc'
     variance_criteria = 0.02             # min variance contour in m**2 to define the high variability regions
     coastal_distance_criteria = 200.     # max distance to coast in km to define the coastal regions
     
@@ -312,7 +312,7 @@ def compute_stat_scores_by_regimes(ds_interp, output_file):
             coastal_analysis = stats.describe(data_vector_selected, nan_policy='omit')
             coastal_rmse = np.sqrt(np.nanmean((np.ma.masked_invalid(data_vector_selected))**2))
             if(var_name == 'mapping_err'):
-                coastal_nrmse_score = 1-np.sqrt(np.nanmean(np.ma.masked_invalid(data_vector_selected)**2))/np.sqrt(np.mean((ds_interp['sla_unfiltered'] - ds_interp['lwe']).values**2)),'m')
+                coastal_nrmse_score = 1-np.sqrt(np.nanmean(np.ma.masked_invalid(data_vector_selected)**2))/np.sqrt(np.mean((ds_interp['sla_unfiltered'] - ds_interp['lwe']).values**2))
 
             #lon_vector_selected = np.ma.masked_where(msk, lon_vector).compressed()
             #lat_vector_selected = np.ma.masked_where(msk, lat_vector).compressed()
@@ -329,7 +329,7 @@ def compute_stat_scores_by_regimes(ds_interp, output_file):
             offshore_highvar_analysis = stats.describe(data_vector_selected, nan_policy='omit')
             offshore_highvar_rmse = np.sqrt(np.nanmean((np.ma.masked_invalid(data_vector_selected))**2))
             if(var_name == 'mapping_err'):
-                offshore_highvar_nrmse_score = 1-np.sqrt(np.nanmean(np.ma.masked_invalid(data_vector_selected)**2))/np.sqrt(np.mean((ds_interp['sla_unfiltered'] - ds_interp['lwe']).values**2)),'m')
+                offshore_highvar_nrmse_score = 1-np.sqrt(np.nanmean(np.ma.masked_invalid(data_vector_selected)**2))/np.sqrt(np.mean((ds_interp['sla_unfiltered'] - ds_interp['lwe']).values**2))
 
             #lon_vector_selected = np.ma.masked_where(msk, lon_vector).compressed()
             #lat_vector_selected = np.ma.masked_where(msk, lat_vector).compressed()
@@ -346,7 +346,7 @@ def compute_stat_scores_by_regimes(ds_interp, output_file):
             offshore_lowvar_analysis = stats.describe(data_vector_selected, nan_policy='omit')
             offshore_lowvar_rmse = np.sqrt(np.nanmean((np.ma.masked_invalid(data_vector_selected))**2))
             if(var_name == 'mapping_err'):
-                offshore_lowvar_nrmse_score = 1-np.sqrt(np.nanmean(np.ma.masked_invalid(data_vector_selected)**2))/np.sqrt(np.mean((ds_interp['sla_unfiltered'] - ds_interp['lwe']).values**2)),'m')
+                offshore_lowvar_nrmse_score = 1-np.sqrt(np.nanmean(np.ma.masked_invalid(data_vector_selected)**2))/np.sqrt(np.mean((ds_interp['sla_unfiltered'] - ds_interp['lwe']).values**2))
 
             #lon_vector_selected = np.ma.masked_where(msk, lon_vector).compressed()
             #lat_vector_selected = np.ma.masked_where(msk, lat_vector).compressed()
@@ -363,7 +363,7 @@ def compute_stat_scores_by_regimes(ds_interp, output_file):
             equatorial_analysis = stats.describe(data_vector_selected, nan_policy='omit')
             equatorial_rmse = np.sqrt(np.nanmean((np.ma.masked_invalid(data_vector_selected))**2))
             if(var_name == 'mapping_err'):
-                equatorial_nrmse_score = 1-np.sqrt(np.nanmean(np.ma.masked_invalid(data_vector_selected)**2))/np.sqrt(np.mean((ds_interp['sla_unfiltered'] - ds_interp['lwe']).values**2)),'m')
+                equatorial_nrmse_score = 1-np.sqrt(np.nanmean(np.ma.masked_invalid(data_vector_selected)**2))/np.sqrt(np.mean((ds_interp['sla_unfiltered'] - ds_interp['lwe']).values**2))
 
         else:
             equatorial_analysis = [0, [np.nan, np.nan], np.nan, np.nan, np.nan, np.nan,]
@@ -376,7 +376,7 @@ def compute_stat_scores_by_regimes(ds_interp, output_file):
             arctic_analysis = stats.describe(data_vector_selected, nan_policy='omit')
             arctic_rmse = np.sqrt(np.nanmean((np.ma.masked_invalid(data_vector_selected))**2))
             if(var_name == 'mapping_err'):
-                arctic_nrmse_score = 1-np.sqrt(np.nanmean(np.ma.masked_invalid(data_vector_selected)**2))/np.sqrt(np.mean((ds_interp['sla_unfiltered'] - ds_interp['lwe']).values**2)),'m')
+                arctic_nrmse_score = 1-np.sqrt(np.nanmean(np.ma.masked_invalid(data_vector_selected)**2))/np.sqrt(np.mean((ds_interp['sla_unfiltered'] - ds_interp['lwe']).values**2))
 
         else:
             arctic_analysis = [0, [np.nan, np.nan], np.nan, np.nan, np.nan, np.nan,]
@@ -389,7 +389,7 @@ def compute_stat_scores_by_regimes(ds_interp, output_file):
             antarctic_analysis = stats.describe(data_vector_selected, nan_policy='omit')
             antarctic_rmse = np.sqrt(np.nanmean((np.ma.masked_invalid(data_vector_selected))**2))
             if(var_name == 'mapping_err'):
-                antarctic_nrmse_score = 1-np.sqrt(np.nanmean(np.ma.masked_invalid(data_vector_selected)**2))/np.sqrt(np.mean((ds_interp['sla_unfiltered'] - ds_interp['lwe']).values**2)),'m')
+                antarctic_nrmse_score = 1-np.sqrt(np.nanmean(np.ma.masked_invalid(data_vector_selected)**2))/np.sqrt(np.mean((ds_interp['sla_unfiltered'] - ds_interp['lwe']).values**2))
 
         else:
             antarctic_analysis = [0, [np.nan, np.nan], np.nan, np.nan, np.nan, np.nan,]
