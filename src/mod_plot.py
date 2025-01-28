@@ -136,21 +136,24 @@ def plot_stat_by_regimes(stat_output_filename):
     pandas DataFrame
         DataFrame containing the statistical summary by regions and variables.
     """
+
+    print('AAAAA')
     
     my_dictionary = {}
     for region in ['coastal', 'offshore_highvar', 'offshore_lowvar', 'equatorial_band', 'arctic', 'antarctic']:
         my_dictionary[f'{region}'] = {}
-        for var_name in ['mapping_err', 'sla_unfiltered', 'mapping_err_filtered', 'sla_filtered']:
+        for var_name in ['mapping_err']:#, 'sla_unfiltered', 'mapping_err_filtered', 'sla_filtered']:
         
             ds = xr.open_dataset(stat_output_filename, group=f'{region}_{var_name}')
+            print(var_name)
 
-            my_dictionary[f'{region}'][f'{var_name}_var [m²]'] =  ds['variance'].values[0]
-            my_dictionary[f'{region}'][f'{var_name}_rms'] =  ds['rmse'].values[0]
+            #my_dictionary[f'{region}'][f'{var_name}_var [m²]'] =  ds['variance'].values[0]
+            #my_dictionary[f'{region}'][f'{var_name}_rms'] =  ds['rmse'].values[0]
             my_dictionary[f'{region}'][f'{var_name}_nrms_score'] =  ds['nrmse_score'].values[0]
     
-    for region in ['coastal', 'offshore_highvar', 'offshore_lowvar', 'equatorial_band', 'arctic', 'antarctic']:
-        my_dictionary[region]['var_score_allscale'] = 1. - my_dictionary[region]['mapping_err_var [m²]']/my_dictionary[region]['sla_unfiltered_var [m²]']
-        my_dictionary[region]['var_score_filtered'] = 1. - my_dictionary[region]['mapping_err_filtered_var [m²]']/my_dictionary[region]['sla_filtered_var [m²]']
+    #for region in ['coastal', 'offshore_highvar', 'offshore_lowvar', 'equatorial_band', 'arctic', 'antarctic']:
+    #    my_dictionary[region]['var_score_allscale'] = 1. - my_dictionary[region]['mapping_err_var [m²]']/my_dictionary[region]['sla_unfiltered_var [m²]']
+    #    my_dictionary[region]['var_score_filtered'] = 1. - my_dictionary[region]['mapping_err_filtered_var [m²]']/my_dictionary[region]['sla_filtered_var [m²]']
     
     return pd.DataFrame(my_dictionary.values(), index=my_dictionary.keys())
 

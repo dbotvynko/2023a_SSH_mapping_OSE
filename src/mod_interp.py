@@ -183,8 +183,6 @@ def interpolate(df, time_series, start, end, var='sla'):
     interpolator = time_series._load_dataset(var, start, end)
     mask = (df.index >= start) & (df.index < end)
     selected = df.loc[mask, ["longitude", "latitude"]]
-    print('Interp inside')
-    print(selected)
     df.loc[mask, ["msla_interpolated"]] = interpolator.trivariate(
         dict(longitude=selected["longitude"].values,
              latitude=selected["latitude"].values,
