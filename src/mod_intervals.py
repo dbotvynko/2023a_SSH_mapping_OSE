@@ -193,7 +193,7 @@ def periods(df, time_series, var_name="sla_unfiltered", frequency='W'):
         yield start, end
     yield end, df.index[-1] + time_series.dt
 
-def interpolate_ssh(df, time_series, start, end, var='ssh', forecast_interval=False, **kwargs):
+def interpolate_plus(df, time_series, start, end, var='ssh', out_var='ssh_interpolated', forecast_interval=False, **kwargs):
     """
     Interpolate the time series over the defined period.
 
@@ -212,21 +212,25 @@ def interpolate_ssh(df, time_series, start, end, var='ssh', forecast_interval=Fa
     additionnal_args = {}
     if forecast_interval:
         additionnal_args['z_method'] = 'nearest'
+    if 'num_threads' in kwargs:
+        num_threads = kwargs.pop('num_threads')
+    else:
+        num_threads=0
 
     interpolator = time_series._load_dataset(var, start, end)
     mask = (df.index >= start) & (df.index < end)
     selected = df.loc[mask, ["longitude", "latitude"]]
-    df.loc[mask, ["mssh_interpolated"]] = interpolator.trivariate(
+    df.loc[mask, [out_var]] = interpolator.trivariate(
         dict(longitude=selected["longitude"].values,
              latitude=selected["latitude"].values,
              time=selected.index.values),
         #interpolator="inverse_distance_weighting",
         interpolator="bilinear",
         **additionnal_args,
-        num_threads=0)
+        num_threads=num_threads)
     
     
-def run_interpolation_ssh(ds_maps, ds_alongtrack, frequency='M', var_alongtrack='ssh', var_rec='ssh', **kwargs):
+def run_interpolation_plus(ds_maps, ds_alongtrack, frequency='M', var_alongtrack='ssh', var_rec='ssh', out_var='ssh_interpolated', **kwargs):
     """
     Interpolate time series data over specified periods.
 
@@ -250,7 +254,7 @@ def run_interpolation_ssh(ds_maps, ds_alongtrack, frequency='M', var_alongtrack=
     df = ds_alongtrack.to_dataframe()
 
     for start, end in periods(df, time_series, frequency=frequency, var_name=var_alongtrack):
-        interpolate_ssh(df, time_series, start, end, var_rec, **kwargs)
+        interpolate_plus(df, time_series, start, end, var_rec, out_var, **kwargs)
         
     ds = df.to_xarray()
         
